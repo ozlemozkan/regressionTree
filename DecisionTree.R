@@ -9,16 +9,8 @@ library(ElemStatLearn)
 library(ggplot2)
 library(xgboost)
 
-setwd("C:/Users/oezlemoezkan/Documents/HW")
+#Read the xlsx
 df <- read.xlsx("OrderVol_Prediction.xlsx",1,header= TRUE)
-
-
-#HANA Connection
-library(RODBC)
-in.table  = "OEOEZKAN.OrderVolume"
-HDB <- odbcConnect("HANA_H67", uid="OEOEZKAN", pwd= rstudioapi::askForPassword("Samples User Password"))
-data_HANA <- sqlFetch(HDB, "OEOEZKAN.TESTTABLE") 
-df_HANA <- data.frame(data_HANA)
 
 
 #column drops
@@ -50,7 +42,10 @@ df$South.Korea.Industrial.Production..t.0.<- lead(df$South.Korea.Industrial.Prod
 
 lagdrops <- c("Brasil.Government.Expenditure..t.1.","Brasil.Government.Expenditure..t.2.", "Brasil.Government.Expenditure..t.3.",
                         "Brasil.Government.Expenditure..t.4.",
-              "Brasil.Industrial.Production..t.1.",  "China.Government.Expenditure..t.0.", "China.Government.Expenditure..t.1.", "China.Government.Expenditure..t.5.",
+                        "Brasil.Industrial.Production..t.1.",  
+                        "China.Government.Expenditure..t.0.", 
+                        "China.Government.Expenditure..t.1.", 
+                         "China.Government.Expenditure..t.5.",
                         "China.Government.Expenditure..t.3.",
                         "India.Government.Expenditure..t.0.",
                         "India.Government.Expenditure..t.2.",
@@ -66,7 +61,7 @@ df <- df[, ! names(df) %in% lagdrops, drop = F]
 
 
 
-#Variance Check
+#Variance Check #no need for now
 
 # apply(df, 2, var)  
 # apply(df, 1, var)  
@@ -234,7 +229,7 @@ test<- dfshort[ind==2,]
     text(tree_model,pretty=0)
     
     
-    #XGBOOST
+    #XGBOOST tree
     
     #Check Balance
     dfshort %>%  group_by(Order.Volume) %>% summarise(number=n())
